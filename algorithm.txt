@@ -1,0 +1,21 @@
+Pipe
+├── opt: l[i] can only be pipe if l-1[i] is also a pipe or a T
+├── l[i] is a pipe if there exists a fork above and below it that is encountered before a data block
+├── an uninitialized block is a pipe if the block above it is a pipe or a T
+└── Simplify: a unitialized block always becomes a pipe when the block above it is a pipe or a fork
+Fork
+└── l[i] is always a fork if l[i+1] is data
+Gap
+├── l[i] is a gap if there is a bend above it (passing through gaps) and there is data or EOF below it (passing though gaps) on i or less
+└── Simplify: a uninitialized block always becomes gap when the block above it is a gap or a bend
+Bend
+└── [l][i] is a bend when [l][i+1] is data and [l+n][i+1] is not data until [l+n][0:i] is data
+					and data is encountered at [l+n][i] before data is encounted at [l+n][0:i]
+Order of operations
+├── Return on Data
+├── Bend
+├── Fork
+├── Gap
+└── Pipe
+
+[l][i] is a bend when [l][i+1] is data and [l+n][i+1:] becomes data before [l+n][i] does

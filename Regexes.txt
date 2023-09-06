@@ -1,0 +1,9 @@
+Convert markup back to tabs:
+/(└── )|(│   )|(├── )|(    )/gm
+
+Prune Invalid TABs that are not at the start of a row:
+/(?:^\t+[^\t]*)(\t*)(?:.*)/gm
+
+
+Prune groups of spaces larger than 1 outside of the markup:
+/(?:[a-z])( {2,})/gm

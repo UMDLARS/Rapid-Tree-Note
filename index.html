@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'/>
+    <title>Rapid Tree Note</title>
+
+  </head>
+  <body>
+    <h1>Rapid Tree Notetaker</h1>
+    <div style="display: flex; justify-content: center; align-items: center; height: 8vh; padding: 25px;">
+      <button style="width: 50%; height: 8vh; font-size: 24px;" id="execute" onclick="execute()">Parse</button>
+    </div>
+    <div style="display: flex; justify-content: center; align-items: center; height: 50vh; padding: 25px;">
+      <textarea id="source" style="width: 40%; height: 50vh; border: solid 8px black; font-size: 16px; padding: 25px;"></textarea>
+      <textarea id="display" style="width: 40%; height: 50vh; border: solid 8px black; font-size: 16px; padding: 25px;"></textarea>
+    </div>
+    
+    <script>
+      function execute()
+      {
+        var input = document.getElementById("source").value;
+        var output = "";
+
+        console.log("███████████████████");
+        console.log("Input value: ");
+        console.log(input);
+        console.log("-------------------");
+
+        output = parse(input);
+
+        console.log("Output value: ")
+        console.log(output);
+        console.log("==================");
+
+        document.getElementById("display").value = output;
+      }
+
+      //================================================//
+      function parse(input)
+      {
+        return input + "newdata";
+      }
+      //================================================//
+
+      function catchTab(event)
+      {
+        if(event.key == "Tab")
+        {
+            event.preventDefault();
+            var area = document.getElementById("source");
+            var start = area.selectionStart;
+            area.value = area.value.substring(0,start) + "\t" + area.value.substring(start);
+        }
+      }
+
+      document.getElementById("source").addEventListener("keydown", (event) => {catchTab(event)});
+    </script>
+
+
+  </body>
+</html>

@@ -24,7 +24,7 @@ export class Tree
 
         this.nodes.push(new Node(data, level));
 
-        console.log(this);
+        //console.log(this);
 
         
         function removeTabs(input)
@@ -68,75 +68,235 @@ export class Tree
             mainArr.push(holder);
         }
 
-        for(var i = 0; i < mainArr.length; i++)
+        
+        for(var line = 0; line < mainArr.length; line++)
         {
-            var previous = null;
-            if(i > 0)
+            for(var index = 0; index < mainArr[line].length; index++)
             {
-                previous = mainArr[i-1];
-            }
-
-            var next = null;
-            if(i < mainArr.length)
-            {
-                next = mainArr[i+1];
-            }
-        }
-        /**
-
-        for(var row = 0; row < mainArr.length; row++)
-        {
-            for(var col = 0; col < mainArr[row].length; col++)
-            {
-                if((right(row, col, mainArr).type != "Data" && right(row, col, mainArr).type != "End") && mainArr[row][col].type != "Data")
+                var solution = "";
+                //Data
+                if(solution == "")
                 {
-                    mainArr[row][col] = new Line();
+                    if(access(line,index,mainArr) == "Data")
+                    {
+                        solution = "Data";
+                    }
                 }
-            }
-        }
-
-        for(var row = 0; row < mainArr.length; row++)
-        {
-            for(var col = 0; col < mainArr[row].length; col++)
-            {
-                if((right(row, col, mainArr).type != "Data" && (down(row, col, mainArr).type == "Data" || down(row, col, mainArr).type == "Gap" || down(row, col, mainArr).type == null))&& mainArr[row][col].type != "Data")
+                //Bend
+                if(solution == "")
                 {
-                    mainArr[row][col] = new Gap();
+                    var shouldBend = null;
+                    var rightIsData = access(line,index+1,mainArr)=="Data";
+                    if(rightIsData)
+                    {
+                        if(access(line+1,index,mainArr) == "Null" || access(line+1,index,mainArr) == "Data")
+                        {
+                            shouldBend = true;
+                        }
+                        if(shouldBend == null)
+                        {
+                            var downDistanceToData = findDataDown(line,index,mainArr);
+                            var rightDistanceToData = findDataRight(line,index,mainArr);
+
+                            console.log(line, index, downDistanceToData, rightDistanceToData);
+
+                            if(downDistanceToData <= rightDistanceToData)
+                            {
+                                shouldBend = true;
+                            }
+                            else
+                            {
+                                shouldBend = false;
+                            }
+
+                            function findDataDown(line, index, mainArr)
+                            {
+                                console.log("D", line, index, mainArr);
+                                var distance = 0;
+                                while(line < mainArr.length)
+                                {
+                                    console.log("D", line, index);
+                                    if(line+1 > mainArr.length - 1)
+                                    {
+                                        return distance;
+                                    }
+                                    var holder = access(line+1,index,mainArr);
+                                    if(holder == "Data" || holder == "Null")
+                                    {
+                                        return distance;
+                                    }
+                                    distance++;
+                                    line++;
+                                }
+                                return distance;
+                            }
+
+                            function findDataRight(line, index, mainArr)
+                            {
+                                console.log("R", line, index, mainArr);
+                                var distance = 0;
+                                while(line < mainArr.length)
+                                {
+                                    console.log("D", line, index);
+                                    if(line+1 > mainArr.length - 1)
+                                    {
+                                        return distance;
+                                    }
+                                    var holder = access(line+1,index+1,mainArr);
+                                    if(holder == "Data" || holder == "Null")
+                                    {
+                                        return distance;
+                                    }
+                                    distance++;
+                                    line++;
+                                }
+                                return distance;
+                            }
+                        }
+                    }
+                    if(shouldBend)
+                    {
+                        mainArr[line][index] = new Bend();
+                        solution = "Fork";
+                    }
+                    /**
+                    var rightIsData = access(line,index+1,mainArr)=="Data";
+                    if(rightIsData)
+                    {
+                        var shouldBend = false;
+                        var lock = false;
+                        var offset = 0;
+                        var holder;
+                        var leftData;
+                        var downData;
+                        console.log(mainArr);
+
+                        if(access(line+1,i,mainArr) == "Data")
+                        {
+                            shouldBend = true;
+                            lock = true;
+                        }
+
+                        while(!lock)
+                        {
+                            console.log("QUERT" + access(line+offset+1,index,mainArr));
+                            if(access(line+offset+1,index,mainArr) == "Null")
+                            {
+                                leftData = false;
+                                downData = false;
+                                lock = true;
+                                shouldBend = true;
+                                console.log("exiting early");
+                            }
+
+                            else
+                            {
+                                console.log("slicing line " + (line+offset) + " from 0 to " + (index-1));
+                                console.log("from context of " + line + "," + index);
+                                holder = mainArr[line+offset].slice(0,index-1);
+                                console.log(holder);
+                                leftData = holder.includes("Data");
+                                downData = access(line + offset, index + 1, mainArr) == "Data";
+                            }
+                            
+                            if(!leftData && !downData)
+                            {
+                                offset++;
+                                console.log("A");
+                            }
+                            if(!leftData && downData)
+                            {
+                                shouldBend = false;
+                                lock = true;
+                                console.log("B");
+                            }
+                            if(leftData && !downData)
+                            {
+                                shouldBend = true;
+                                lock = true;
+                                console.log("C");
+                            }
+                            if(leftData && downData)
+                            {
+                                console.warn("Edge case at " + line + "," + index);
+                                shouldBend = false;
+                                lock = true;
+                            }
+                        }
+                        if(shouldBend)
+                        {
+                            mainArr[line][index] = new Bend();
+                            solution = "Bend";
+                        }
+                    }
+                    */
                 }
+                //Fork
+                if(solution == "")
+                {
+                    if(access(line,index+1,mainArr)=="Data")
+                    {
+                        mainArr[line][index] = new Fork();
+                        solution = "Fork";
+                    }
+                }
+                //Gap
+                if(solution == "")
+                {
+                    if((access(line-1,index,mainArr)=="Gap" || access(line-1,index,mainArr)=="Bend"))
+                    {
+                        mainArr[line][index] = new Gap();
+                        solution = "Gap";
+                    }
+                }
+                //Line
+                if(solution == "")
+                {
+                    if((access(line-1,index,mainArr)=="Line" || access(line-1,index,mainArr)=="Fork"))
+                    {
+                        mainArr[line][index] = new Line();
+                        solution = "Line";
+                    }
+                }
+                
+                //console.log("Solved: [" + line + "][" + index + "] with answer " + solution);
             }
         }
-       
-        */
-
+        
         console.log(mainArr);
 
-
-
-        function right(row,index,mainArr)
+        var result = "";
+        for(var line = 0; line < mainArr.length; line++)
         {
-            if(mainArr.length - 1 < row)
+            for(var index = 0; index < mainArr[line].length; index++)
             {
-                return new Null();
+                result += mainArr[line][index].data;
             }
-            if(mainArr[row].length - 1 <= index)
-            {
-                return new Null();
-            }
-            return mainArr[row][index+1].type;
+            result += "\n";
         }
 
-        function down(row, index, mainArr)
+        return result;
+
+        function access(row,index,mainArr)
         {
-            if(row + 1 >= mainArr.length)
+            //console.log(row, index, mainArr);
+            if(row < 0 || index < 0)
             {
-                return new Null();
+                return "Null";
+            }
+            if(mainArr.length - 1 < row)
+            {
+                return "Null";
             }
             if(mainArr[row].length - 1 < index)
             {
-                return new Null();
+                return "Null";
             }
-            return mainArr[row+1][index].type;
+            return mainArr[row][index].type;
         }
+        
+
+        
     }
 
 
@@ -281,8 +441,7 @@ class ExecutiveBuffer extends VirtualBuffer
         }
 
         console.log(this.tree);
-
-        this.tree.format();
+        console.log(this.tree.format());
 
         return input;
     }
