@@ -98,7 +98,7 @@ export class Tree
                             var downDistanceToData = findDataDown(line,index,mainArr);
                             var rightDistanceToData = findDataRight(line,index,mainArr);
 
-                            console.log(line, index, downDistanceToData, rightDistanceToData);
+                            //console.log(line, index, downDistanceToData, rightDistanceToData);
 
                             if(downDistanceToData <= rightDistanceToData)
                             {
@@ -111,11 +111,11 @@ export class Tree
 
                             function findDataDown(line, index, mainArr)
                             {
-                                console.log("D", line, index, mainArr);
+                                //console.log("D", line, index, mainArr);
                                 var distance = 0;
                                 while(line < mainArr.length)
                                 {
-                                    console.log("D", line, index);
+                                    //console.log("D", line, index);
                                     if(line+1 > mainArr.length - 1)
                                     {
                                         return distance;
@@ -133,11 +133,11 @@ export class Tree
 
                             function findDataRight(line, index, mainArr)
                             {
-                                console.log("R", line, index, mainArr);
+                                //console.log("R", line, index, mainArr);
                                 var distance = 0;
                                 while(line < mainArr.length)
                                 {
-                                    console.log("D", line, index);
+                                    //console.log("D", line, index);
                                     if(line+1 > mainArr.length - 1)
                                     {
                                         return distance;
@@ -441,7 +441,9 @@ class ExecutiveBuffer extends VirtualBuffer
         }
 
         console.log(this.tree);
+        console.log(new Date(Date.now()).getMilliseconds());
         console.log(this.tree.format());
+        console.log(new Date(Date.now()).getMilliseconds());
 
         return input;
     }
