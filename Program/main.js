@@ -365,6 +365,19 @@ class RealBuffer
             this.ref.value = this.ref.value.substring(0,this.start) + "\t" + this.ref.value.substring(this.end);
             this.moveCarrat(1);
         }
+        if(event.key == "Enter")
+        {
+            event.preventDefault();
+            var autoIndent = this.countCaretLeft();
+            this.ref.value = this.ref.value.substring(0,this.start) + "\n" + this.ref.value.substring(this.end);
+            this.moveCarrat(1);
+            for(var i = 0; i < autoIndent; i++)
+            {
+                this.ref.value = this.ref.value.substring(0,this.start) + "\t" + this.ref.value.substring(this.end);
+                this.moveCarrat(1);
+            }
+
+        }
 
         this.state = "LOCKED";
         setTimeout(() => {this.display()}, 10);
@@ -377,8 +390,17 @@ class RealBuffer
         this.readCarrat();
         this.write(this.exe);
         this.writeCarrat();
+        //this.formatCaretForward();
         console.log(this);
         this.state = "UNLOCKED";
+    }
+
+    countCaretLeft()
+    {
+        var lines = this.raw.value.substring(0, this.raw.selectionStart).split("\n");
+        var lastLine = lines[lines.length-1];
+        var numTabs = lastLine.split("\t").length - 1;
+        return numTabs;
     }
 }
 
@@ -406,7 +428,7 @@ class RawBuffer extends VirtualBuffer
 {
     constructor(realBuffer)
     {
-        super(realBuffer, "red");
+        super(realBuffer, "whitesmoke");
     }
 
     update()
@@ -420,7 +442,7 @@ class ExecutiveBuffer extends VirtualBuffer
 {
     constructor(realBuffer)
     {
-        super(realBuffer, "blue");
+        super(realBuffer, "whitesmoke");
         this.tree = new Tree();
     }
 
@@ -442,8 +464,11 @@ class ExecutiveBuffer extends VirtualBuffer
 
         console.log(this.tree);
         console.log(new Date(Date.now()).getMilliseconds());
-        console.log(this.tree.format());
+        var result = this.tree.format();
         console.log(new Date(Date.now()).getMilliseconds());
+
+        document.getElementById("display").value = result;
+
 
         return input;
     }

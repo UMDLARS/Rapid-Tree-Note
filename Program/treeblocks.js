@@ -51,7 +51,7 @@ export class New extends Block
 {
     constructor()
     {
-        super("???", "");
+        super("???", "____");
     }
 }
 
